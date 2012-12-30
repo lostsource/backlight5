@@ -178,8 +178,7 @@ function Backlight5(elem,options) {
 		var imagedata = ctx.getImageData(0,0,horizLedCount,vertLedCount);
 		var i,r,g,b;
 		for(i in ledMatrix) {
-			// TODO can this parseInt be avoided ?
-			i = parseInt(i,10);
+			i = i >>> 0; // convert to integer
 		
 			var ledCell = ledMatrix[i];
 			r = imagedata.data[i];
