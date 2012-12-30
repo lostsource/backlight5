@@ -176,29 +176,25 @@ function Backlight5(elem,options) {
 		var imagedata = ctx.getImageData(0,0,horizLedCount,vertLedCount);
 		var data = imagedata.data;
 
-		var x = 0, y = 0;
-		for(var i = 0, len = data.length; i < len; i+=4) {
-			/// TODO this part is teribly slow on firefox
-
-			/// TODO, is this correct? should we be using vertLedCount ?
-			x = (Math.floor(i / 4) % horizLedCount);
-			y = Math.floor(Math.floor(i/horizLedCount)/4);
-
-			// do nothing if we dont have a led for this coordinate, 
-			if(!ledMatrix[x+":"+y]) {
-				continue;
-			}
-
-			var ledCell = ledMatrix[x+":"+y];
-			var r,g,b;
-			r = data[i];
-			g = data[i+1];
-			b = data[i+2];
-			
-			ledCell.style.boxShadow = "1px 1px 70px 20px rgb("+r+","+g+","+b+")";
-
-		}
+		var i = 0,r,g,b;
 		
+		for(var y = 0; y < horizLedCount; y++) {
+			for(var x = 0; x < vertLedCount; x++) {
+				if(!ledMatrix[x+":"+y]) {
+					continue;
+				}
+
+				i = (x*4)+((horizLedCount*4)*y);
+				
+				r = data[i];
+				g = data[i+1];
+				b = data[i+2];
+				ledCell = ledMatrix[x+":"+y];
+
+				/// NOTE firefox is teribly slow here
+				ledCell.style.boxShadow = "1px 1px 70px 20px rgb("+r+","+g+","+b+")";
+			}
+		}
 	}
 
 
