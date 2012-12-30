@@ -148,7 +148,9 @@ function Backlight5(elem,options) {
 		 		cell.style.webkitTransitionProperty = "box-shadow";
 		 		cell.style.webkitTransitionDuration = ".5s";
 
-				ledMap[x+":"+y] = cell;
+		 		// ledId has same value of imagedata index used in updateLeds method
+		 		var ledId = (x*4)+((horizLedCount*4)*y);
+				ledMap[ledId] = cell;
 			}
 		}
 
@@ -174,26 +176,18 @@ function Backlight5(elem,options) {
 		);
 
 		var imagedata = ctx.getImageData(0,0,horizLedCount,vertLedCount);
-		var data = imagedata.data;
-
-		var i = 0,r,g,b;
+		var i,r,g,b;
+		for(i in ledMatrix) {
+			// TODO can this parseInt be avoided ?
+			i = parseInt(i,10);
 		
-		for(var y = 0; y < horizLedCount; y++) {
-			for(var x = 0; x < vertLedCount; x++) {
-				if(!ledMatrix[x+":"+y]) {
-					continue;
-				}
+			var ledCell = ledMatrix[i];
+			r = imagedata.data[i];
+			g = imagedata.data[i+1];
+			b = imagedata.data[i+2];
 
-				i = (x*4)+((horizLedCount*4)*y);
-				
-				r = data[i];
-				g = data[i+1];
-				b = data[i+2];
-				ledCell = ledMatrix[x+":"+y];
-
-				/// NOTE firefox is teribly slow here
-				ledCell.style.boxShadow = "1px 1px 70px 20px rgb("+r+","+g+","+b+")";
-			}
+			/// NOTE firefox is teribly slow here
+			ledCell.style.boxShadow = "1px 1px 70px 20px rgb("+r+","+g+","+b+")";
 		}
 	}
 
