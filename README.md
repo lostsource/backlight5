@@ -31,8 +31,8 @@ Settings can be modified at runtime
 	backlight.setSpread(20);
 
 	// speed of led updates in seconds
-	// 0 is instant, defaults to 0.2
-	backlight.setResponse(0.2);
+	// 0 is instant, defaults to 0.5
+	backlight.setResponse(0.5);
 
 Settings can also be specified on initialization
 
@@ -40,5 +40,5 @@ Settings can also be specified on initialization
     	sepration: 5
     	blur: 50,
     	spread: 20,
-    	response: 0.2
+    	response: 0.5
     });

@@ -34,7 +34,7 @@ function Backlight5(elem,options) {
 	vertLedCount = parseInt(vertLedCount,10);
 
 	var lastLedReponse;
-	var ledResponse = options.response || .2;
+	var ledResponse = options.response || .5;
 	ledResponse = parseFloat(ledResponse);
 
 
@@ -162,6 +162,9 @@ function Backlight5(elem,options) {
 		if(tbl.parentNode !== outerframe) {
 			outerframe.insertBefore(tbl,elem);
 		}
+
+		// new cells have been added, must re-set ledResponse
+		lastLedReponse = false; 
 
 		return ledMap;
 	}
