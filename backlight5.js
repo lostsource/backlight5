@@ -33,6 +33,11 @@ function Backlight5(elem,options) {
 	horizLedCount = parseInt(horizLedCount,10);
 	vertLedCount = parseInt(vertLedCount,10);
 
+	var lastLedReponse;
+	var ledResponse = options.response || .2;
+	ledResponse = parseFloat(ledResponse);
+
+
 	var debugMode = options.debug || false;
 	var outerframe,ledGrid,ledMatrix;
 
@@ -140,15 +145,10 @@ function Backlight5(elem,options) {
 
 		 		cell.style.transitionTimingFunction = "linear";
 		 		cell.style.transitionProperty = "box-shadow";
-		 		cell.style.transitionDuration = ".5s";
-
 		 		cell.style.MozTransitionTimingFunction = "linear";
 		 		cell.style.MozTransitionProperty = "box-shadow";
-		 		cell.style.MozTransitionDuration = ".5s";
-
 		 		cell.style.webkitTransitionTimingFunction = "linear";
 		 		cell.style.webkitTransitionProperty = "box-shadow";
-		 		cell.style.webkitTransitionDuration = ".5s";
 
 		 		// ledId has same value of imagedata index used in updateLeds method
 		 		var ledId = (x*4)+((horizLedCount*4)*y);
@@ -176,6 +176,7 @@ function Backlight5(elem,options) {
 			updateLeds();
 		});
 
+
 		var ctx = getCanvasContext(horizLedCount,vertLedCount);
 		ctx.drawImage(
 			elem,0,0,srcWidth,srcHeight // source
@@ -192,9 +193,19 @@ function Backlight5(elem,options) {
 			g = imagedata.data[i+1];
 			b = imagedata.data[i+2];
 
+			if(lastLedReponse != ledResponse) {
+				// if ledResponse value changed we must update transition duration property
+				ledCell.style.webkitTransitionDuration = ledResponse+"s";
+		 		ledCell.style.transitionDuration = ledResponse+"s";
+		 		ledCell.style.MozTransitionDuration = ledResponse+"s";
+			}
+
+
 			/// NOTE firefox is teribly slow here
 			ledCell.style.boxShadow = "1px 1px "+ledBlur+"px "+ledSpread+"px rgb("+r+","+g+","+b+")";
 		}
+
+		lastLedReponse = ledResponse;
 	}
 
 	function getCanvasContext(w,h) {
@@ -237,6 +248,12 @@ function Backlight5(elem,options) {
 		// determins length of backlight
 		setSpread: function(i) {
 			ledSpread = parseInt(i,10);
+		},
+
+		// time (in seconds) for led update speed
+		// 0 is fastest
+		setResponse: function(seconds) {
+			ledResponse = parseFloat(seconds);
 		}
 	}
 }
