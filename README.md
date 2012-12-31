@@ -30,10 +30,15 @@ Settings can be modified at runtime
 	// spread (length) of backlight (defaults to 20)
 	backlight.setSpread(20);
 
+	// speed of led updates in seconds
+	// 0 is instant, defaults to 0.2
+	backlight.setResponse(0.2);
+
 Settings can also be specified on initialization
 
     var backlight = Backlight5(document.getElementById('someMovie'),{
     	sepration: 5
     	blur: 50,
-    	spread: 20
+    	spread: 20,
+    	response: 0.2
     });
