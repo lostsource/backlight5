@@ -28,10 +28,12 @@ function Backlight5(elem,options) {
 
 	options = options || {};
 
-	var horizLedCount = options.resX || 10;
-	var vertLedCount =  options.resY || 10;
-	var debugMode = options.debug || false;
+	var horizLedCount = options.separation || 5;
+	var vertLedCount =  options.separation || 5;
+	horizLedCount = parseInt(horizLedCount,10);
+	vertLedCount = parseInt(vertLedCount,10);
 
+	var debugMode = options.debug || false;
 	var outerframe,ledGrid,ledMatrix;
 
 	// canvas context cache
@@ -164,6 +166,11 @@ function Backlight5(elem,options) {
 		return ledMap;
 	}
 
+	var ledBlur = options.blur || 50;
+	var ledSpread = options.spread || 20;
+	ledBlur = parseInt(ledBlur,10);
+	ledSpread = parseInt(ledSpread,10);
+
 	function updateLeds() {
 		requestAnimationFrame.call(window,function(){
 			updateLeds();
@@ -186,10 +193,9 @@ function Backlight5(elem,options) {
 			b = imagedata.data[i+2];
 
 			/// NOTE firefox is teribly slow here
-			ledCell.style.boxShadow = "1px 1px 70px 20px rgb("+r+","+g+","+b+")";
+			ledCell.style.boxShadow = "1px 1px "+ledBlur+"px "+ledSpread+"px rgb("+r+","+g+","+b+")";
 		}
 	}
-
 
 	function getCanvasContext(w,h) {
 		var cacheId = w+":"+h;
@@ -211,9 +217,26 @@ function Backlight5(elem,options) {
 	}
 
 	return {
-		updateResolution: function(w,h) {
-			horizLedCount = parseInt(w,10);
-			vertLedCount = parseInt(h,10);
+		// determins color separation
+		// eg. 1, image will be downsampled to 1 color
+		//     5, image will be downsampled to 5x5 .. 5 separate leds per screen side
+		//
+		// higher values require more processing
+		setSeparation: function(i) {
+			horizLedCount = parseInt(i,10);
+			vertLedCount = parseInt(i,10);
+			ledMatrix = createLedMatrix(horizLedCount,vertLedCount);
+		},
+
+		// determins bluriness of backlight
+		// if this is set too low you will sharp boxes instead of backlight
+		setBlur: function(i) {
+			ledBlur = parseInt(i,10);
+		},
+
+		// determins length of backlight
+		setSpread: function(i) {
+			ledSpread = parseInt(i,10);
 		}
 	}
 }
