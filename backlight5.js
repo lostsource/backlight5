@@ -28,6 +28,8 @@ function Backlight5(elem,options) {
 
 	options = options || {};
 
+	var ledsExposed = false;
+
 	var horizLedCount = options.separation || 5;
 	var vertLedCount =  options.separation || 5;
 	horizLedCount = parseInt(horizLedCount,10);
@@ -206,6 +208,11 @@ function Backlight5(elem,options) {
 
 			/// NOTE firefox is teribly slow here
 			ledCell.style.boxShadow = "1px 1px "+ledBlur+"px "+ledSpread+"px rgb("+r+","+g+","+b+")";
+
+			if(ledsExposed) {
+				// when leds are exposed background color is also changed
+				ledCell.style.backgroundColor = "rgb("+r+","+g+","+b+")";
+			}
 		}
 
 		lastLedReponse = ledResponse;
@@ -257,6 +264,19 @@ function Backlight5(elem,options) {
 		// 0 is fastest
 		setResponse: function(seconds) {
 			ledResponse = parseFloat(seconds);
+		},
+
+		// hides source element (video) so leds are exposed
+		// could be used to see how leds work
+		hideElement: function() {
+			ledsExposed = true;
+			elem.style.display = "none";
+		},
+
+		// shows source element (if previously hidden by hideElement method)
+		showElement: function() {
+			ledsExposed = false;
+			elem.style.display = "";
 		}
 	}
 }
